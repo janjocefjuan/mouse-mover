@@ -28,6 +28,29 @@ except Exception:
 pyautogui.FAILSAFE = True  # slam the cursor into a screen corner to force-stop
 pyautogui.PAUSE = 0
 
+# On Windows, simply repositioning the cursor (what the mouse movement below
+# does) does not reliably reset the OS idle timer used for sleep/display-off
+# on modern builds. Use the official power-management API instead so the
+# system and display are told directly to stay awake.
+if sys.platform == "win32":
+    import ctypes
+
+    ES_CONTINUOUS = 0x80000000
+    ES_SYSTEM_REQUIRED = 0x00000001
+    ES_DISPLAY_REQUIRED = 0x00000002
+
+    def _set_keep_awake(enabled):
+        flags = ES_CONTINUOUS
+        if enabled:
+            flags |= ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED
+        try:
+            ctypes.windll.kernel32.SetThreadExecutionState(flags)
+        except Exception:
+            pass
+else:
+    def _set_keep_awake(enabled):
+        pass
+
 APP_TITLE = "Mouse Mover"
 TRAY_TOOLTIP = "Background Helper"  # deliberately generic tray tooltip
 MODE_JIGGLE = "jiggle"
@@ -79,9 +102,11 @@ class MoverThread(threading.Thread):
         self._stop_event.set()
 
     def run(self):
+        _set_keep_awake(True)
         try:
             while not self._stop_event.is_set():
                 self._move_once()
+                _set_keep_awake(True)  # re-assert - some builds let it lapse
                 if self.on_tick:
                     self.on_tick()
                 self._stop_event.wait(self._next_wait())
@@ -91,6 +116,8 @@ class MoverThread(threading.Thread):
         except Exception as exc:  # pragma: no cover - defensive
             if self.on_error:
                 self.on_error(str(exc))
+        finally:
+            _set_keep_awake(False)
 
     def _next_wait(self):
         if not self.jitter:
