@@ -64,6 +64,12 @@ To launch already hidden (e.g. from a login/startup entry):
 python mouse_mover.py --minimized
 ```
 
+## Setup guide for non-technical users
+
+`Marksman-Setup-Guide.pdf` in this repo is a printable, plain-language walkthrough
+covering the whole install on Windows without touching a command prompt. Send it
+to anyone you're sharing Marksman with.
+
 ## One-click launcher on Windows (portable Python, no PATH needed)
 
 If you're running from a portable distribution like WinPython, use the
