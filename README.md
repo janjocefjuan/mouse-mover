@@ -1,13 +1,20 @@
-# Mouse Mover
+# Marksman
 
-A small cross-platform desktop app that periodically nudges your mouse cursor —
-useful for preventing your screen/status from going idle (e.g. Teams/Slack
-"Away" status) or your OS from sleeping.
+A small cross-platform desktop app that keeps your machine awake and your
+status "active" — it periodically nudges your mouse cursor and tells the OS
+directly not to sleep or blank the display.
+
+The app is called **Marksman**; the script file is still `mouse_mover.py`.
 
 ## Features
 
 - **Jiggle mode**: moves the cursor a couple of pixels and back, barely noticeable.
 - **Random mode**: moves the cursor to a random point on screen each interval.
+- **Keeps the system awake**: on Windows it calls the OS power-management API
+  (`SetThreadExecutionState`) so the display/system won't sleep even if cursor
+  movement alone isn't enough to reset the idle timer.
+- **Dark UI** with custom-drawn toggles, steppers and a segmented mode picker,
+  plus a matching dark title bar on Windows 10/11.
 - Configurable interval and jiggle distance.
 - **Randomized timing**: each interval varies ±25% so movement doesn't happen
   on a perfectly predictable beat.
@@ -15,7 +22,7 @@ useful for preventing your screen/status from going idle (e.g. Teams/Slack
   dot icon, neutral tooltip) instead of sitting open on screen or in the
   taskbar/dock. Closing the window hides it to the tray rather than quitting.
 - Settings (mode, interval, distance, start-minimized, auto-start) persist
-  between runs in `~/.mouse_mover_config.json`.
+  between runs in `~/.marksman_config.json`.
 - Built-in safety: slam the cursor into any screen corner to instantly force-stop
   (this is `pyautogui`'s fail-safe).
 
