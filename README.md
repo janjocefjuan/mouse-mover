@@ -57,10 +57,25 @@ To launch already hidden (e.g. from a login/startup entry):
 python mouse_mover.py --minimized
 ```
 
+## One-click launcher on Windows (portable Python, no PATH needed)
+
+If you're running from a portable distribution like WinPython, use the
+included silent launcher instead of typing commands each time:
+
+1. `Marksman.vbs` — double-click it to launch the app completely silently
+   (no console window) and already minimized to the tray. It auto-detects
+   `pythonw.exe` by looking in parent folders for a `python` directory, so it
+   keeps working even if you move the whole thing to a new location.
+2. `Install Marksman Shortcut.vbs` — run this **once** to create a
+   "Marksman" shortcut on your Desktop and in your Start Menu, both pointing
+   at `Marksman.vbs`. After that, launch it from the Desktop or by typing
+   "Marksman" in the Start Menu search — no need to open this folder again.
+
 ## Running automatically at login
 
 - **Windows**: put a shortcut to `pythonw.exe mouse_mover.py --minimized` in
-  the Startup folder (`Win+R` → `shell:startup`). `pythonw.exe` avoids a
+  the Startup folder (`Win+R` → `shell:startup`), or copy the "Marksman"
+  shortcut created above into that folder. `pythonw.exe` avoids a
   console window popping up.
 - **macOS**: add the app/script as a Login Item (System Settings → General →
   Login Items), or use a `launchd` agent that runs
